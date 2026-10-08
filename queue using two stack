@@ -1,0 +1,52 @@
+#include <stdio.h>
+
+int s1[100], s2[100];
+int top1 = -1, top2 = -1;
+
+void enqueue(int x) {
+    if (top1 >= 99) {
+        printf("Queue Overflow!\n");
+        return;
+    }
+    s1[++top1] = x;
+    printf("Enqueued: %d\n", x);
+}
+
+int dequeue() {
+    if (top1 == -1 && top2 == -1) {
+        printf("Queue Underflow!\n");
+        return -1;
+    }
+
+    // Move elements from s1 to s2 only when s2 is empty
+    if (top2 == -1) {
+        while (top1 != -1) {
+            s2[++top2] = s1[top1--];
+        }
+    }
+
+    return s2[top2--];
+}
+
+int main() {
+    // Enqueue elements
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+
+    // Dequeue elements (FIFO Order)
+    printf("Dequeued: %d\n", dequeue()); // Output: 10
+    printf("Dequeued: %d\n", dequeue()); // Output: 20
+
+    // Enqueue another element
+    enqueue(40);
+
+    // Dequeue remaining elements
+    printf("Dequeued: %d\n", dequeue()); // Output: 30
+    printf("Dequeued: %d\n", dequeue()); // Output: 40
+
+    // Attempt dequeue on empty queue
+    printf("Dequeued: %d\n", dequeue()); // Underflow: -1
+
+    return 0;
+}
